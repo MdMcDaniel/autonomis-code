@@ -1,4 +1,61 @@
+#include <WPILib.h>
+#include <math.h>
 
+#define DRIVE_ENCODER_TO_FEET 0.00434782608695652173913043478261
 
-
-Talon *motorLeft *motorRight
+class MainRobot : public SimpleRobot
+{
+  Talon *motorLeft *motorRight *motorLifterRight *motorLifterLeft *motorLoaderLeft *motorLoaderRight;
+  Encoder *encoderRight, *encoderLeft;
+  Timer *timer
+Public:
+  MainRobot(void) {
+    //setting up motors
+    motorLeft = new Talon(1);
+    motorRight = new Talon(2);
+    motorLifterRight = new Talon(3);
+    motorLifterLeft = new Talon(4);
+    motorLoaderRight = new Talon(5);
+    motorLoaderLeft = new Talon(6);
+    
+    // setting up encoders
+    encoderRight = new Encoder(10,11, true, Encoder::k1X);
+		encoderRight->SetDistancePerPulse(DRIVE_ENCODER_TO_FEET);
+		encoderRight->Start();
+		encoderLeft = new Encoder(12,13, false, Encoder::k1X);
+		encoderLeft->SetDistancePerPulse(DRIVE_ENCODER_TO_FEET);
+		encoderLeft->Start();
+		
+		//lastly, timer
+		timer = new Timer();
+		timer->Start();
+		timer->Reset();
+		
+    void Autonomous ()
+    {
+    
+    //Autonomous will pick up the tote and bring it into auto zone and nothing else
+    //loading the tote
+    motorLoaderLeft->set(-.5);
+    motorLoaderRight->set(.5);
+    
+    while(IsAutonomous() && Timer() < 3) {
+      wait(0.01)
+    }
+    
+    motorLoaderLeft->set(0.0);
+    motorLoaderRight->set(0.0);
+    
+    //runing it into auto zone
+    motorLeft->set(1.0);
+    motorRight->set(-1.0);
+    
+    while(IsAutonomous() && encoderLeft->getDistance() < 7 ) {
+      wait(0.01);
+    };
+    
+    motorLeft->set(0.0);
+    motorRight->set(0.0);
+  }
+}
+    
