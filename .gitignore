@@ -34,10 +34,10 @@ Public:
     void Autonomous ()
     {
     
-    //Autonomous will pick up the tote and bring it into auto zone and nothing else
+    //Autonomous will pick up the tote and push the bin into the auto zone.
     //loading the tote
-    motorLoaderLeft->set(-.5);
-    motorLoaderRight->set(.5);
+    motorLoaderLeft->set(-0.5);
+    motorLoaderRight->set(0.5);
     
     while(IsAutonomous() && Timer() < 3) {
       wait(0.01)
@@ -46,7 +46,48 @@ Public:
     motorLoaderLeft->set(0.0);
     motorLoaderRight->set(0.0);
     
-    //runing it into auto zone
+    //waiting to give the tote time to settle
+    wait(0.5);
+    
+    motorLifterRight->set(-0.5);
+    motorLifterLeft->set(-0.5);
+    
+    while(IsAutonomous() && Timer() < 3) {
+    	wait(0.01)
+    }
+    
+    //Turning it to get to the bin
+    motorLeft->set(0.0);
+    motorRight->set(-0.5);
+    
+    while(IsAutonomous() && Timer() < 2) {
+    	wait(0.01)
+    }
+    
+    motorLeft->set(0.0);
+    motorRight->set(0.0);
+    
+    motorLeft->set(0.4);
+    motorRight->set(-0.4);
+    
+    while(IsAutonomous() && encoderLeft->getDistance() < 2 ) {
+      wait(0.01);
+    };
+    
+    motorLeft->set(0.0);
+    motorRight->set(0.0)
+    
+    motorLeft->set(-0.5);
+    motorRight->set(0.0);
+    
+    while(IsAutonomous() && Timer() < 2) {
+    	wait(0.01)
+    }
+    
+    motorLeft->set(0.0);
+    motorRight->set(0.0);
+    
+    //runing the bin into auto zone
     motorLeft->set(1.0);
     motorRight->set(-1.0);
     
